@@ -3,10 +3,15 @@ import matplotlib.pyplot as plt
 from skimage import measure, morphology
 from skimage.color import label2rgb
 from skimage.measure import regionprops
+from datetime import datetime
+from tkinter import messagebox
 
 def extract(src_img_path):
+    log = ""
+
     try:
-        print("\nSignature Extraction process started...")
+        log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature Extraction process started..."])
+
         #Read the input image
         img = cv2.imread(src_img_path, 0)
         img = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)[1]  #Ensure binary
@@ -51,6 +56,13 @@ def extract(src_img_path):
         #Save the the result
         output_filename = "".join([os.path.basename(src_img_path).split(".")[0], "-output.jpg"])
         cv2.imwrite(output_filename, img)
-        crop.crop(output_filename)
+
+        log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature(s) detected on the document image."])
+
+        log += crop.crop(output_filename)
+    
     except Exception as e:
-        print("Error: {}".format(e))
+        messagebox.showerror("Error", "".join(["Error: ", str(e)]))
+
+    finally:
+        return log
