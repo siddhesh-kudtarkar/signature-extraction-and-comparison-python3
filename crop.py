@@ -20,13 +20,13 @@ def crop(output_filename):
 
         log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Separating detected signature(s)."])
         
-        counter = 1
+        counter, padding = 1, 30
         if len(contours) != 0:
             for c in contours:
                 x,y,w,h = cv2.boundingRect(c)
                 if(h>20):
-                    cv2.rectangle(image,(x,y),(x+w,y+h),(0,0,255),1)
-                    ROI = image[y:y+h, x:x+w].copy()
+                    cv2.rectangle(image,(x - padding,y - padding),(x + w + padding,y + h + padding),(0,0,255), 1)
+                    ROI = image[(y - padding):(y + h + padding), (x - padding):(x + w + padding)].copy()
                     cv2.imwrite("".join([output_folder_name, "/output-", str(counter), ".jpg"]), ROI)
                     counter += 1
 

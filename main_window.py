@@ -1,4 +1,4 @@
-from tkinter import Tk, Button, RAISED, Label, LEFT, filedialog, Toplevel, messagebox, PhotoImage, scrolledtext, HORIZONTAL, INSERT
+from tkinter import Tk, Button, RAISED, Label, LEFT, filedialog, Toplevel, messagebox, PhotoImage, scrolledtext, HORIZONTAL, INSERT, END
 from tkinter.ttk import Progressbar
 import extraction, compare, os
 
@@ -77,6 +77,7 @@ def start_process(process_name):
 
     if (process_name == "extraction"):
         extraction_log_text.configure(state="normal")
+        extraction_log_text.delete('0.0', END)
         extraction_progressbar.start()
         log = extraction.extract(src_img_path)
         extraction_log_text.insert(INSERT, log)
@@ -85,10 +86,11 @@ def start_process(process_name):
 
     elif (process_name == "comparison"):
         comparison_log_text.configure(state="normal")
-        comparison_progress.start()
+        comparison_log_text.delete('0.0', END)
+        comparison_progressbar.start()
         log = compare.compare(src_img_path, ref_img_path)
         comparison_log_text.insert(INSERT, log)
-        comparison_progress.stop()
+        comparison_progressbar.stop()
         comparison_log_text.configure(state="disabled")
 
 #Main Window
@@ -168,8 +170,8 @@ btn_start_comparison.pack(padx=10, pady=15)
 lbl_comparison_log = Label(comparison_window, text="Progress of process:", font=("Calibri", 15, "bold"), background="lightblue", width=35)
 lbl_comparison_log.pack(padx=10, pady=15)
 
-comparison_progress = Progressbar(comparison_window, length=350, orient=HORIZONTAL, mode="indeterminate")
-comparison_progress.pack(padx=10, pady=15, expand="False")
+comparison_progressbar = Progressbar(comparison_window, length=350, orient=HORIZONTAL, mode="indeterminate")
+comparison_progressbar.pack(padx=10, pady=15, expand="False")
 
 comparison_log_text = scrolledtext.ScrolledText(comparison_window, width=45, height=7, state="disabled")
 comparison_log_text.pack(padx=10, pady=15)
