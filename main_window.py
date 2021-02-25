@@ -1,6 +1,7 @@
 from tkinter import Tk, Button, RAISED, Label, LEFT, filedialog, Toplevel, messagebox, PhotoImage, scrolledtext, HORIZONTAL, INSERT, END
 from tkinter.ttk import Progressbar
 import extraction, compare, os
+from datetime import datetime
 
 src_img_path, ref_img_path = "", ""
 

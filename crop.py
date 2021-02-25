@@ -75,9 +75,10 @@ def crop(output_filename):
             rect.y = int(rect.y - (padding/2))
             rect.width = rect.width + padding
             rect.height = rect.height + padding
-            ROI = image[(rect.y):(rect.y + rect.height), (rect.x):(rect.x + rect.width)].copy()
-            cv2.imwrite("".join([output_folder_name, "/output-", str(counter), ".jpg"]), ROI)
-            counter += 1
+            if (rect.width >= 100 and rect.height >= 100):
+                ROI = image[(rect.y):(rect.y + rect.height), (rect.x):(rect.x + rect.width)].copy()
+                cv2.imwrite("".join([output_folder_name, "/output-", str(counter), ".jpg"]), ROI)
+                counter += 1
 
         os.remove(output_filename)
 

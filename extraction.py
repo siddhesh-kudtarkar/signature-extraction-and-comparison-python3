@@ -14,7 +14,7 @@ def extract(src_img_path):
 
         #Read the input image
         img = cv2.imread(src_img_path, 0)
-        img = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)[1]  #Ensure binary
+        rect, img = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
 
         #Connected component analysis by scikit-learn framework
         blobs = img > img.mean()
