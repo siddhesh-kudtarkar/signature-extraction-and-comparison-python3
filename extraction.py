@@ -6,11 +6,15 @@ from skimage.measure import regionprops
 from datetime import datetime
 from tkinter import messagebox
 
-def extract(src_img_path):
-    log = ""
+def extract(src_img_path, mode="gui"):
+    if (mode == "gui"):
+        log = ""
 
     try:
-        log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature Extraction process started..."])
+        if (mode == "gui"):
+            log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature Extraction process started..."])
+        else:
+            print("".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature Extraction process started..."]))
 
         #Read the input image
         img = cv2.imread(src_img_path, 0)
@@ -57,12 +61,19 @@ def extract(src_img_path):
         output_filename = "".join([os.path.basename(src_img_path).split(".")[0], "-output.jpg"])
         cv2.imwrite(output_filename, img)
 
-        log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature(s) detected on the document image."])
-
-        log += crop.crop(output_filename)
+        if (mode == "gui"):
+            log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature(s) detected on the document image."])
+            log += crop.crop(output_filename)
+        else:
+            print("".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature(s) detected on the document image."]))
+            crop.crop(output_filename, "cli")
     
     except Exception as e:
-        messagebox.showerror("Error", "".join(["Error: ", str(e)]))
+        if (mode == "gui"):
+            messagebox.showerror("Error", "".join(["Error: ", str(e)]))
+        else:
+            print("Error: {}".format(str(e)))
 
     finally:
-        return log
+        if (mode == "gui"):
+            return log

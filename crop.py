@@ -4,8 +4,9 @@ import numpy as np
 from tkinter import messagebox
 from datetime import datetime
 
-def crop(output_filename):
-    log = ""
+def crop(output_filename, mode="gui"):
+    if (mode == "gui"):
+        log = ""
 
     try:
         image = cv2.imread(output_filename, 1)
@@ -20,7 +21,10 @@ def crop(output_filename):
         if (os.path.exists(output_folder_name) == False):
             os.mkdir(output_folder_name)
 
-        log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Separating detected signature(s)."])
+        if (mode == "gui"):
+            log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Separating detected signature(s)."])
+        else:
+            print("".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Separating detected signature(s)."]))
         
         padding = 30
         if len(contours) != 0:
@@ -82,14 +86,18 @@ def crop(output_filename):
 
         os.remove(output_filename)
 
-        log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature Extraction process completed."])
-
-        log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Extracted signature(s) is/are stored in '", output_folder_name, "' folder."])
-
-        messagebox.showinfo("Success", "".join(["Extracted signature(s) is/are stored in '", output_folder_name, "' folder."]))
+        if (mode == "gui"):
+            log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature Extraction process completed.", "\n", str(datetime.now().time()).split(".")[0], " ", "Extracted signature(s) is/are stored in '", output_folder_name, "' folder."])
+            messagebox.showinfo("Success", "".join(["Extracted signature(s) is/are stored in '", output_folder_name, "' folder."]))
+        else:
+            print("".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature Extraction process completed.", "\n", str(datetime.now().time()).split(".")[0], " ", "Extracted signature(s) is/are stored in '", output_folder_name, "' folder.", "\nSUCCESS: Extracted signature(s) is/are stored in '", output_folder_name, "' folder."]))
     
     except Exception as e:
-        messagebox.showerror("Error", "".join(["Error: ", str(e)]))
+        if (mode == "gui"):
+            messagebox.showerror("Error", "".join(["Error: ", str(e)]))
+        else:
+            print("Error: {}".format(str(e)))
     
     finally:
-        return log
+        if (mode == "gui"):
+            return log

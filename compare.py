@@ -4,11 +4,15 @@ import numpy as np
 from datetime import datetime
 from tkinter import messagebox
 
-def compare(src_img_path, ref_img_path):
-    log = ""
+def compare(src_img_path, ref_img_path, mode="gui"):
+    if (mode == "gui"):
+        log = ""
 
     try:
-        log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature Comparison process started..."])
+        if (mode == "gui"):
+            log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature Comparison process started..."])
+        else:
+            print("".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature Comparison process started..."]))
 
         src = cv2.imread(src_img_path)
         ref = cv2.imread(ref_img_path)
@@ -50,15 +54,21 @@ def compare(src_img_path, ref_img_path):
                 cv2.drawContours(mask, [c], 0, (0,255,0), -1)
                 cv2.drawContours(filled_ref, [c], 0, (0,255,0), -1)
 
-        log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature Comparison process completed."])
+        if (mode == "gui"):
+            log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature Comparison process completed."])
+            messagebox.showinfo("Success", "".join(["Image Similarity: ", str(similarity), "%.\nDifference in images: ", str(difference), "%."]))
+        else:
+            print("".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature Comparison process completed.", "\nSUCCESS:\nImage Similarity: ", str(similarity), "%.\nDifference in images: ", str(difference), "%."]))
 
         similarity = round(score * 100, 2)
         difference = round(100.0 - similarity, 2) 
 
-        messagebox.showinfo("Success", "".join(["Image Similarity: ", str(similarity), "%.\nDifference in images: ", str(difference), "%."]))
-
     except Exception as e:
-        messagebox.showerror("Error", "".join(["Error: ", str(e)]))
+        if (mode == "gui"):
+            messagebox.showerror("Error", "".join(["Error: ", str(e)]))
+        else:
+            print("Error: {}".format(str(e)))
 
     finally:
-        return log
+        if (mode == "gui"):
+            return log
