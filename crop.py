@@ -17,9 +17,12 @@ def crop(output_filename, mode="gui"):
         img = cv2.morphologyEx(img, cv2.MORPH_CLOSE, rect_kernel)
         contours, hier = cv2.findContours(img, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
 
+        if (os.path.exists("outputs") == False):
+            os.mkdir("outputs")
+        
         output_folder_name = output_filename.split(".")[0]
-        if (os.path.exists(output_folder_name) == False):
-            os.mkdir(output_folder_name)
+        if (os.path.exists("outputs/" + output_folder_name) == False):
+            os.mkdir("outputs/" + output_folder_name)
 
         if (mode == "gui"):
             log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Separating detected signature(s)."])
@@ -81,16 +84,16 @@ def crop(output_filename, mode="gui"):
             rect.height = rect.height + padding
             if (rect.width >= 100 and rect.height >= 100):
                 ROI = image[(rect.y):(rect.y + rect.height), (rect.x):(rect.x + rect.width)].copy()
-                cv2.imwrite("".join([output_folder_name, "/output-", str(counter), ".jpg"]), ROI)
+                cv2.imwrite("".join(["outputs/", output_folder_name, "/output-", str(counter), ".jpg"]), ROI)
                 counter += 1
 
         os.remove(output_filename)
 
         if (mode == "gui"):
-            log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature Extraction process completed.", "\n", str(datetime.now().time()).split(".")[0], " ", "Extracted signature(s) is/are stored in '", output_folder_name, "' folder."])
-            messagebox.showinfo("Success", "".join(["Extracted signature(s) is/are stored in '", output_folder_name, "' folder."]))
+            log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature Extraction process completed.", "\n", str(datetime.now().time()).split(".")[0], " ", "Extracted signature(s) is/are stored in 'outputs/", output_folder_name, "' folder."])
+            messagebox.showinfo("Success", "".join(["Extracted signature(s) is/are stored in 'outputs/", output_folder_name, "' folder."]))
         else:
-            print("".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature Extraction process completed.", "\n", str(datetime.now().time()).split(".")[0], " ", "Extracted signature(s) is/are stored in '", output_folder_name, "' folder.", "\nSUCCESS: Extracted signature(s) is/are stored in '", output_folder_name, "' folder."]))
+            print("".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature Extraction process completed.", "\n", str(datetime.now().time()).split(".")[0], " ", "Extracted signature(s) is/are stored in 'outputs/", output_folder_name, "' folder.", "\nSUCCESS: Extracted signature(s) is/are stored in 'outputs/", output_folder_name, "' folder."]))
     
     except Exception as e:
         if (mode == "gui"):

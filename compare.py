@@ -32,7 +32,11 @@ def compare(src_img_path, ref_img_path, mode="gui"):
 
         #Compute SSIM between two images
         (score, diff) = compare_ssim(src_gray, ref_gray, full=True)
-        log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Computing Structural Similarity Index between two images"])
+
+        if (mode == "gui"):
+            log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Computing Structural Similarity Index between two images"])
+        else:
+            print("".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Computing Structural Similarity Index between two images"]))
 
         # The diff image contains the actual image differences between the two images and is represented as a floating point data type in the range [0,1] so we must convert the array to 8-bit unsigned integers in the range [0,255] src we can use it with OpenCV
         diff = (diff * 255).astype("uint8")
@@ -45,23 +49,14 @@ def compare(src_img_path, ref_img_path, mode="gui"):
         mask = np.zeros(src.shape, dtype='uint8')
         filled_ref = ref.copy()
 
-        for c in contours:
-            area = cv2.contourArea(c)
-            if area > 40:
-                x,y,w,h = cv2.boundingRect(c)
-                cv2.rectangle(src, (x, y), (x + w, y + h), (36,255,12), 2)
-                cv2.rectangle(ref, (x, y), (x + w, y + h), (36,255,12), 2)
-                cv2.drawContours(mask, [c], 0, (0,255,0), -1)
-                cv2.drawContours(filled_ref, [c], 0, (0,255,0), -1)
+        similarity = round(score * 100, 2)
+        difference = round(100.0 - similarity, 2)
 
         if (mode == "gui"):
             log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature Comparison process completed."])
             messagebox.showinfo("Success", "".join(["Image Similarity: ", str(similarity), "%.\nDifference in images: ", str(difference), "%."]))
         else:
-            print("".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature Comparison process completed.", "\nSUCCESS:\nImage Similarity: ", str(similarity), "%.\nDifference in images: ", str(difference), "%."]))
-
-        similarity = round(score * 100, 2)
-        difference = round(100.0 - similarity, 2) 
+            print("".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature Comparison process completed.", "\nSUCCESS:\nImage Similarity: ", str(similarity), "%.\nDifference in images: ", str(difference), "%."])) 
 
     except Exception as e:
         if (mode == "gui"):
