@@ -34,9 +34,6 @@ def compare(src_img_path, ref_img_path, mode="gui"):
         src_gray = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
         ref_gray = cv2.cvtColor(ref, cv2.COLOR_BGR2GRAY)
 
-        cv2.imwrite("src.jpg", src_gray)
-        cv2.imwrite("ref.jpg", ref_gray)
-
         if (mode == "gui"):
             log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Computing Structural Similarity Index between two images"])
         else:
