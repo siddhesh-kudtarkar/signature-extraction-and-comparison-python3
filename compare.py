@@ -25,18 +25,25 @@ def compare(src_img_path, ref_img_path, mode="gui"):
         elif ((h2 > h1)  or (w2 > w1)):
             ref = cv2.resize(ref, (w1, h1))
 
+        if (mode == "gui"):
+            log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Converting images to grayscale."])
+        else:
+            print("".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Converting images to grayscale."]))
+        
         # Convert images to grayscale
         src_gray = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
         ref_gray = cv2.cvtColor(ref, cv2.COLOR_BGR2GRAY)
-        log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Converting images to grayscale."])
 
-        #Compute SSIM between two images
-        (score, diff) = compare_ssim(src_gray, ref_gray, full=True)
+        cv2.imwrite("src.jpg", src_gray)
+        cv2.imwrite("ref.jpg", ref_gray)
 
         if (mode == "gui"):
             log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Computing Structural Similarity Index between two images"])
         else:
             print("".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Computing Structural Similarity Index between two images"]))
+
+        #Compute SSIM between two images
+        (score, diff) = compare_ssim(src_gray, ref_gray, full=True)
 
         # The diff image contains the actual image differences between the two images and is represented as a floating point data type in the range [0,1] so we must convert the array to 8-bit unsigned integers in the range [0,255] src we can use it with OpenCV
         diff = (diff * 255).astype("uint8")
