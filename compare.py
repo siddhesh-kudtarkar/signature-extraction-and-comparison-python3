@@ -54,13 +54,23 @@ def compare(src_img_path, ref_img_path, mode="gui"):
         filled_ref = ref.copy()
 
         similarity = round(score * 100, 2)
-        difference = round(100.0 - similarity, 2)
 
+        result = ""
+        if (similarity >= 0.00 and similarity <= 30.00):
+            result = "POOR MATCH"
+        elif (similarity > 30.00 and similarity <= 60.00):
+            result = "AVERAGE MATCH"
+        elif (similarity > 60.00 and similarity <= 90.00):
+            result = "GOOD MATCH"
+        else:
+            result = "EXCELLENT MATCH"
+        
         if (mode == "gui"):
             log += "".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature Comparison process completed."])
-            messagebox.showinfo("Success", "".join(["Image Similarity: ", str(similarity), "%.\nDifference in images: ", str(difference), "%."]))
+            
+            messagebox.showinfo("Success", "".join(["Image Similarity: ", str(similarity), "%.", "\n\nResult: ", result]))
         else:
-            print("".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature Comparison process completed.", "\nSUCCESS:\nImage Similarity: ", str(similarity), "%.\nDifference in images: ", str(difference), "%."])) 
+            print("".join(["\n", str(datetime.now().time()).split(".")[0], " ", "Signature Comparison process completed.", "\nSUCCESS:\nImage Similarity: ", str(similarity), "%.\nResult: ", result])) 
 
     except Exception as e:
         if (mode == "gui"):
